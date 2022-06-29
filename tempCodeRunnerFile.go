@@ -1,0 +1,1 @@
+var c, python, java = true, false, "no!"
