@@ -2,28 +2,43 @@ package main
 
 import (
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
-type User struct {
-	Username string `json: "username"`
-	Password string `json: "password"`
+type todo struct {
+	ID string `json:"id"`
+	Item string `json:"item"`
+	Completed bool `json:"completed"`
 }
 
-func GetHelloWorld(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Hello World"})
+var todos = []todo{
+	{ID: "1", Item: "cleanroom", Completed: false},
+	{ID: "2", Item: "cleanroom", Completed: false},
+	{ID: "3", Item: "cleanroom", Completed: false},
 }
 
-func Post(c *gin.Context) {
-	var u User
-	c.BindJSON(&u)
-	c.JSON(http.StatusOK, gin.H{"result": u})
+func getTodos(context *gin.Context){
+	context.IndentedJSON(http.StatusOK, todos)
+}
+
+func addTodo(context *gin.Context){
+	var newTodo todo
+
+	if err != nil{
+		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "messagefail"})
+	}
+
+	if err := context.BindJSON(&newTodo); err != nil {
+		return
+	}
+	todos = append(todos, newTodo)
+
+	context.IndentedJSON(http.StatusCreated, newTodo)
 }
 
 func main() {
-	r := gin.Default()
-	r.GET("/", GetHelloWorld)
-	r.POST("/", Post)
-	r.Run()
+	router := gin.Default()
+	router.GET("/todos", getTodos)
+	router.POST("/todos", addTodo)
+	router.Run(":9090")
 }
