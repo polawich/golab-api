@@ -38,6 +38,7 @@ func addTodo(context *gin.Context){
 
 func main() {
 	router := gin.Default()
+	router.LoadHTMLGlob("../templates/*.html")
 	router.GET("/todos", getTodos)
 	router.POST("/todos", addTodo)
 	router.Run(":9090")
