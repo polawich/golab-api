@@ -2,13 +2,14 @@
 package main
 
 import (
+    // "encoding/json"
     "html/template"
     "net/http"
 )
 
 type ContactDetails struct {
-    Fname   string
-    Lname string
+    Fname   string `json:"fname"`
+    Lname   string `json:"lname"`
 }
 
 func main() {
@@ -22,17 +23,22 @@ func main() {
 
         details := ContactDetails{
             Fname:   r.FormValue("fname"),
-            Lname: r.FormValue("lname"),
+            Lname:   r.FormValue("lname"),
         }
-
-        // // do something with details
-        // _ = details
 
         tmpl.Execute(w, struct{ 
 			Success bool 
 			Form ContactDetails
 			}{true, details})
     })
+    // http.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
+    //     form1 := ContactDetails{
+    //         Fname: "John",
+    //         Lname:  "Doe",
+    //     }
+
+    //     json.NewEncoder(w).Encode(form1)
+    // })
 
     http.ListenAndServe(":8080", nil)
 }
